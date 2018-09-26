@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <div class="tip-invite">
-      <img src="@/assets/text-index-05.png" >
+      <img src="@/assets/text-index-05.png" @click="$router.replace({name:'items'})" >
       <img 
         src="@/assets/text-index-06.png" 
         class="mt-tip" 
