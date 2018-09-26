@@ -3,11 +3,11 @@
     <div class="page">
       <div v-swipeleft="{fn:swipeleft,name:'左滑'}" v-swiperight="{fn:swiperight,name:'右滑'}" :class="animationClass" class="page-container">
         <div class="item-trans">
-            <div class="item-trans-01">
-              <div class="item"><img :src="require(`@/assets/item-0${currentIndex}.png`)" ></div>
-              <div class="item-text"><img :src="require(`@/assets/text-item-0${currentIndex}.png`)"></div>
-              <div class="star-frames"><canvas id="frames"></canvas></div>
-            </div>
+          <div class="item-trans-01">
+            <div class="item"></div>
+            <div class="item-text"><img :src="require(`@/assets/text-item-0${currentIndex}.png`)"></div>
+            <div class="star-frames"><canvas id="frames"></canvas></div>
+          </div>
         </div>
         <div class="item-clicks">
           <div><img src="@/assets/icon-comment.png" @click="$router.replace({name:'list'})"></div>
@@ -15,7 +15,7 @@
         </div>
         <div class="item-selects">
           <div class="item-selects-container">
-            <div v-for="(item,index) in itemSelects" :key="index" class="item-select"><img :src="item.img"></div>
+            <div v-for="(item,index) in itemSelects" :key="index" class="item-select"></div>
           </div>
         </div>
         <div class="item-dots">
@@ -37,13 +37,18 @@
       </div>
       <div class="item-detail-close" @click="detailSeen = false"><img src="@/assets/icon-close-02.png" class="img-fluid"></div>
     </div>
+    <div class="animation-imgs">
+      <div v-for="(item,index) in itemSelects" :key="index"><img :src="item.img"></div>
+    </div>
   </v-container>
 </template>
 <script>
   import {
     mapGetters
   } from "vuex";
-  import { drawFrames } from "../utils/frames"
+  import {
+    drawFrames
+  } from "../utils/frames"
   import {
     TweenLite,
     Circ
@@ -55,8 +60,7 @@
         animationClass: null,
         detailSeen: false,
         hasCompleted: true,
-        time: 0.6,
-        show: false
+        time: 0.6
       };
     },
     computed: {
@@ -100,48 +104,57 @@
     },
     created() {},
     mounted() {
-      this.show = true
-      let container = document.querySelector('.item-selects-container')
-      let nodes = container.childNodes
-      for (let i = 0; i < nodes.length; i++) {
-        TweenLite.to(nodes[i], 0, {
-          x: () => {
-            if (i != 0) {
-              return (i - 1) * 80
-            } else {
-              return 120;
-            }
-          },
-          y: () => {
-            if (i == 1 || i == 4) {
-              return 70;
-            } else if (i == 2 || i == 3) {
-              return 110;
-            } else {
-              return -110;
-            }
-          }
-        });
-      }
+      this.slide()
+      // let container = document.querySelector('.animation-imgs')
+      // let nodes = container.childNodes
+      // for (let i = 0; i < nodes.length; i++) {
+      //   TweenLite.to(nodes[i].childNodes[0], 0, {
+      //     x: () => {
+      //       if (i != 0) {
+      //         return (i - 1) * 80
+      //       } else {
+      //         return 120;
+      //       }
+      //     },
+      //     y: () => {
+      //       if (i == 1 || i == 4) {
+      //         return 70;
+      //       } else if (i == 2 || i == 3) {
+      //         return 110;
+      //       } else {
+      //         return -110;
+      //       }
+      //     }
+      //   });
+      // }
       let imgs = this.imgs
       let id = "frames"
       let width = width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      width = width*0.8;
+      width = width * 0.8;
       let height = width
-      drawFrames({id,width,height,imgs})
+      drawFrames({
+        id,
+        width,
+        height,
+        imgs
+      })
     },
     methods: {
-      showDetail(){
+      showDetail() {
         this.detailSeen = true;
         let id = 'detail-frames'
         let imgs = this.imgs
         let width = width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        width = Math.ceil(0.9*width);
+        width = Math.ceil(0.9 * width);
         let height = width
-        setTimeout(()=>{
-          drawFrames({id,width,height,imgs})
-        },50)
-        
+        setTimeout(() => {
+          drawFrames({
+            id,
+            width,
+            height,
+            imgs
+          })
+        }, 50)
       },
       swipeleft() {
         // this.$store.dispatch('chooseItem', nextId)
@@ -156,7 +169,6 @@
         if (!vm.hasCompleted) {
           return;
         }
-        vm.show = false
         let nextId
         if (toRight) {
           nextId = this.currentIndex - 1;
@@ -170,37 +182,74 @@
           }
         }
         this.$store.dispatch('chooseItem', nextId)
-        let container = document.querySelector('.item-selects-container')
+        let container = document.querySelector('.animation-imgs')
         let nodes = container.childNodes
         for (let i = 0; i < nodes.length; i++) {
           if ((nextId == i + 1 && toRight) || (!toRight && nextId == i + 1)) {
-            TweenLite.to(nodes[i], this.time, {
-              x: 120,
-              y: -110
+            let bezierPath = [{
+              x: 150,
+              y: 200
+            }, {
+              x: 0,
+              y: 0
+            }]
+            if (!toRight) {
+              bezierPath = [{
+                x: -150,
+                y: 200
+              }, {
+                x: 0,
+                y: 0
+              }]
+            }
+            TweenLite.to(nodes[i].childNodes[0], this.time, {
+              bezier: bezierPath,
+              values: true,
+              // x: 0,
+              // y: 0,
+              scale: 1
             })
           } else {
-            TweenLite.to(nodes[i], this.time, {
-              ease: Circ.easeOut,
-              x: () => {
-                if (toRight) {
-                  return (i + 5 - nextId) % 5 * 80;
-                } else {
-                  return (i + 5 - nextId) % 5 * 80;
-                }
-              },
-              y: () => {
-                if (nextId - i == 3 || nextId - i == 4 || nextId - i == -1 || nextId - i == -2) {
-                  return 110;
-                } else {
-                  return 70;
-                }
-              },
-              yoyo: true,
-              onComplete: function() {
-                vm.hasCompleted = true
-                vm.show = true
+            let params, x, y
+            x = (i + 5 - nextId) % 5 * 80 - 120;
+            if (nextId - i == 3 || nextId - i == 4 || nextId - i == -1 || nextId - i == -2) {
+              y = 390;
+            } else {
+              y = 350;
+            }
+            if (((i + 5 - nextId) % 5 == 3 && !toRight) || (toRight && (i + 5 - nextId) % 5 == 0)) {
+              let bezierPath = [{
+                x: 150,
+                y: 300
+              }, {
+                x: x,
+                y: y
+              }]
+              if (toRight) {
+                bezierPath = [{
+                  x: -150,
+                  y: 300
+                }, {
+                  x: x,
+                  y: y
+                }]
               }
-            });
+              params = {
+                bezier: bezierPath,
+                values: true,
+                scale: 0.3365
+              }
+            } else {
+              params = {
+                scale: 0.3365,
+                x: x,
+                y: y
+              }
+            }
+            params.onComplete = function() {
+              vm.hasCompleted = true
+            }
+            TweenLite.to(nodes[i].childNodes[0], this.time, params);
           }
         }
       }
@@ -375,33 +424,35 @@
   }
   .item-selects {
     margin: 0 auto 0;
-    width: 32rem;
+    width: 320px;
     height: 11rem;
     display: flex;
     flex-direction: row;
-    overflow: hidden;
     position: relative;
+    overflow: hidden;
   }
   .item-selects-container {
     position: absolute;
     left: 0;
     right: 0;
-    width: 320px;
-    height: 7rem;
+    width: 400px;
+    height: 110px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
   }
   .item-selects .item-select {
-    position: absolute;
-    left: 0;
-    top: -7rem;
     height: 7rem;
     background: url('../assets/bkg-star.png') center 0 no-repeat;
     background-size: 7rem auto;
     width: 80px;
     text-align: center;
-    height: 7rem;
+    height: 110px;
   }
-  .item-selects img {
-    width: 7rem;
+  .item-selects .item-select:nth-child(2),
+  .item-selects .item-select:nth-child(3) {
+    background-position-y: 40px;
   }
   .item-dots {
     margin: 2rem auto 0;
@@ -419,5 +470,22 @@
   }
   .item-dots i.actived {
     background: #610b0b;
+  }
+  .animation-imgs {
+    position: fixed;
+    z-index: 200;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  .animation-imgs div {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    margin-left: -104px;
+    margin-top: 40px;
+  }
+  .animation-imgs img {
+    width: 208px;
   }
 </style>

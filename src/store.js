@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 export default new Vuex.Store({
 	state: {
-		itemId: 1,
+		itemId: 2,
 		loading: false,
 		image: null,
 		canvas: null,
