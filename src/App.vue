@@ -1,8 +1,8 @@
 <template>
   <v-app>
-      <transition :name="transitionName">
-        <router-view/>
-      </transition>
+    <transition :name="transitionName">
+      <router-view/>
+    </transition>
   </v-app>
 </template>
 
@@ -18,6 +18,8 @@
       '$route' (to, from) {
         if (to.name == 'invite' && from.name == 'home') {
           this.transitionName = 'swipe'
+        } else if (to.name == 'items' && from.name == 'invite') {
+          this.transitionName = 'swipe'
         } else {
           this.transitionName = ''
         }
@@ -26,15 +28,14 @@
     created() {
       let imgs = new Array();
       for (let index = 0; index <= 73; index++) {
-        if( index < 10){
+        if (index < 10) {
           imgs.push(require(`@/assets/frames/banner2v2000${index}.png`));
-        }
-        else{
+        } else {
           imgs.push(require(`@/assets/frames/banner2v200${index}.png`));
         }
       }
       // this.imgs = imgs;
-      this.$store.dispatch('initFrames',imgs)
+      this.$store.dispatch('initFrames', imgs)
       let len = imgs.length;
       for (let i = 0; i < len; i++) {
         let imgObj = new Image(); // 创建图片对象
@@ -71,6 +72,7 @@
         });
       }
       overscroll(document.querySelector('#app'));
+      
       document.addEventListener('touchmove', function(evt) {
         if (!evt._isScroller) {
           evt.preventDefault();
@@ -84,8 +86,8 @@
 
 <style>
   /* body {
-        font-size: 65% !important;
-      } */
+          font-size: 65% !important;
+        } */
   .container {
     padding: 0!important;
     position: relative;

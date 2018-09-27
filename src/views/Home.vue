@@ -6,8 +6,8 @@
         <img src="@/assets/text-index-01.png">
       </div>
       <!-- <div class="tip-close">
-        <img src="@/assets/icon-close-01.png" />
-      </div> -->
+          <img src="@/assets/icon-close-01.png" />
+        </div> -->
     </div>
     <div class="star">
       <img src="@/assets/star.png">
@@ -22,7 +22,7 @@
       <div class="intro-close" @click="introSeen = false"><img src="@/assets/icon-close-02.png"></div>
     </div>
     <div v-if="!introSeen" class="arrow-down">
-      <img src="@/assets/icon-arrow-down.png" @click="$router.replace({name:'invite'})">
+      <img class="icon-arrow" src="@/assets/icon-arrow-down.png" @click="$router.replace({name:'invite'})">
     </div>
   </v-container>
 </template>
@@ -30,7 +30,14 @@
   import {
     mapGetters
   } from "vuex";
-  import { drawFrames } from "../utils/frames"
+  import {
+    drawFrames
+  } from "../utils/frames"
+  import {
+    TweenLite,
+    TweenMax,
+    Circ
+  } from "gsap/TweenMax";
   export default {
     name: "App",
     data() {
@@ -47,9 +54,24 @@
       let imgs = this.imgs
       let id = "frames"
       let width = width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      // let height = Math.ceil(735 / 750 * width);
       let height = width
-      drawFrames({id,width,height,imgs})
+      drawFrames({
+        id,
+        width,
+        height,
+        imgs
+      })
+      const obj = document.querySelector('.icon-arrow')
+      TweenMax.to(".icon-arrow", 0.5, {
+				y: "10px",
+				repeat: -1,
+				yoyo: true,
+				// onRepeat: onRepeat,
+				repeatDelay: 0,
+				ease: Linear.easeNone
+			});
+
+      // TweenLite.to(obj, 1, {y: 10,repeat:-1, yoyo:true})
     },
     methods: {
       swipeup() {
@@ -85,8 +107,8 @@
   }
   .star .star-frames {
     position: absolute;
-    top:0;
-    left: 0;
+    top: 1px;
+    left: 2px;
     right: 0;
     bottom: 0;
   }

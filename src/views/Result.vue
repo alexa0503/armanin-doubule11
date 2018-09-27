@@ -11,10 +11,10 @@
       <div class="mt-3"><img 
         src="@/assets/button-receive.png" 
         width="186" 
-        @click="seen = true" ></div>
+        @click="receive" ></div>
     </div>
     <div class="result-footer" v-else>
-        <img @click="$router.replace({name:'comment'})" class="mt-4" src="@/assets/button-return.png" width="126" />
+        <img @click="$router.replace({name:'list',params:{id:itemId,had:'y'}})" class="mt-4" src="@/assets/button-return.png" width="126" />
     </div>
     <div class="form" v-if="seen">
       <div class="form-container">
@@ -58,7 +58,8 @@
         computed: {
             ...mapGetters({
                 canvas: "canvas",
-                goNow: "goNow"
+                goNow: "goNow",
+                itemId: "itemId"
             })
         },
         methods: {
@@ -84,6 +85,10 @@
                     },1000)
                 }
             },
+            receive(){
+                window.location.href="http://campaign.giorgioarmanibeauty.cn/double112018shoppingguideline"
+                //this.seen = true
+            },
             formSubmit(){
                 let inputs = this.inputs
                 if( inputs.name == '' ){
@@ -104,7 +109,7 @@
                 else{
                     // this.seen = false
                     alert('提交成功')
-                    window.location.href="//www.baidu.com"
+                    window.location.href="http://campaign.giorgioarmanibeauty.cn/double112018shoppingguideline"
                 }
             }
         }

@@ -35,6 +35,7 @@ export default new Vuex.Store({
 	},
 	getters: {
 		itemId: (state) => state.itemId,
+		loading: (state) => state.loading,
 		frameImgs: (state) => state.frameImgs,
 		goNow: (state) => state.goNow,
 		image: (state) => state.image,
@@ -79,19 +80,27 @@ export default new Vuex.Store({
 				fr.addEventListener('load', () => {
 					var image = new Image();
 					image.onload = function() {
-						// var width = this.width;
-						// var height = this.height;
-						// let maxImgSize;
-						// let r1 = height / width;
-						// let r2 = 325 / 354;
-						// let r3 = 325 / height;
-						// let r4 = 354 / width;
-						// if (r1 > r2) {
-						// 	maxImgSize = Math.ceil(height * r4) + 1;
-						// } else {
-						// 	maxImgSize = Math.ceil(width * r3) + 1;
-						// }
-						// commit('maxImgSize', maxImgSize);
+						let width = this.width;
+						let height = this.height;
+						let h1 = 354;
+						let w1 = 325;
+						let maxImgSize;
+						let r1 = height / width;
+						let r2 = h1 / w1;
+
+						let w2 = window.screen.width || document.documentElement.width;
+						let h2 = r1 * w2;
+
+						// let r3 = h1 / height;
+						// let r4 = w1 / width;
+						if (r1 > r2) {
+							// maxImgSize = Math.ceil(h2 * r4) + 1;
+							maxImgSize = h2;
+						} else {
+							// maxImgSize = Math.ceil(w2 * r3) + 1;
+							maxImgSize = w2;
+						}
+						commit('maxImgSize', maxImgSize);
 						commit('loading', false);
 					};
 					image.src = fr.result;

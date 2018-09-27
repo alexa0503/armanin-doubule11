@@ -8,12 +8,12 @@ import store from './store';
 import './stylus/app.styl';
 
 window.axios = require('axios');
-// window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
-window.axios.defaults.withCredentials = true;
+window.axios.defaults.withCredentials = false;
 Vue.config.productionTip = false;
 
-Vue.filter('stringLimit', function(value, len = 28) {
+Vue.filter('stringLimit', function(value, len = 22) {
 	if (value && value.length > len) {
 		value = value.substring(0, len) + '...';
 	}

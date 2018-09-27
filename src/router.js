@@ -27,7 +27,7 @@ export default new Router({
 			component: () => import('./views/Photo.vue')
 		},
 		{
-			path: '/list',
+			path: '/list/:id/:had?',
 			name: 'list',
 			component: () => import('./views/List.vue')
 		},
@@ -35,11 +35,6 @@ export default new Router({
 			path: '/result',
 			name: 'result',
 			component: () => import('./views/Result.vue')
-		},
-		{
-			path: '/comment',
-			name: 'comment',
-			component: () => import('./views/Comment.vue')
 		}
 	]
 });

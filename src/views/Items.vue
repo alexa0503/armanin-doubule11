@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="item-clicks">
-          <div><img src="@/assets/icon-comment.png" @click="$router.replace({name:'list'})"></div>
+          <div><img src="@/assets/icon-comment.png" @click="$router.replace({name:'list',params:{id:currentIndex}})"></div>
           <div><img @click="showDetail" src="@/assets/icon-heart.png"></div>
         </div>
         <div class="item-selects">
@@ -18,9 +18,9 @@
             <div v-for="(item,index) in itemSelects" :key="index" class="item-select"></div>
           </div>
         </div>
-        <div class="item-dots">
+        <!-- <div class="item-dots">
           <i v-for="(item,index) in itemDots" :key="index" :class="item" />
-        </div>
+        </div> -->
       </div>
     </div>
     <div v-if="detailSeen" class="item-detail">
@@ -31,7 +31,7 @@
         <div class="item-detail-title"><img :src="itemTitle" class="mb-2"><img src="@/assets/text-item-detail.png" class="mt-2"></div>
         <div class="item-detail-buttons">
           <img src="@/assets/btn-photo.png" @click="$router.replace({name:'photo'})">
-          <img src="@/assets/btn-reason.png" @click="$router.replace({name:'list'})">
+          <img src="@/assets/btn-reason.png" @click="$router.replace({name:'list',params:{id:currentIndex}})">
         </div>
         <div class="star-frames"><canvas id="detail-frames"></canvas></div>
       </div>
@@ -104,33 +104,11 @@
     },
     created() {},
     mounted() {
-      this.slide()
-      // let container = document.querySelector('.animation-imgs')
-      // let nodes = container.childNodes
-      // for (let i = 0; i < nodes.length; i++) {
-      //   TweenLite.to(nodes[i].childNodes[0], 0, {
-      //     x: () => {
-      //       if (i != 0) {
-      //         return (i - 1) * 80
-      //       } else {
-      //         return 120;
-      //       }
-      //     },
-      //     y: () => {
-      //       if (i == 1 || i == 4) {
-      //         return 70;
-      //       } else if (i == 2 || i == 3) {
-      //         return 110;
-      //       } else {
-      //         return -110;
-      //       }
-      //     }
-      //   });
-      // }
+      this.slide(false)
       let imgs = this.imgs
       let id = "frames"
       let width = width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      width = width * 0.8;
+      width = 300;
       let height = width
       drawFrames({
         id,
@@ -145,7 +123,7 @@
         let id = 'detail-frames'
         let imgs = this.imgs
         let width = width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        width = Math.ceil(0.9 * width);
+        width = 300;
         let height = width
         setTimeout(() => {
           drawFrames({
@@ -157,12 +135,10 @@
         }, 50)
       },
       swipeleft() {
-        // this.$store.dispatch('chooseItem', nextId)
         this.slide(false)
       },
       swiperight() {
-        // this.$store.dispatch('chooseItem', nextId)
-        this.slide()
+        this.slide(true)
       },
       slide(toRight = true) {
         let vm = this
@@ -205,17 +181,15 @@
             TweenLite.to(nodes[i].childNodes[0], this.time, {
               bezier: bezierPath,
               values: true,
-              // x: 0,
-              // y: 0,
               scale: 1
             })
           } else {
             let params, x, y
             x = (i + 5 - nextId) % 5 * 80 - 120;
             if (nextId - i == 3 || nextId - i == 4 || nextId - i == -1 || nextId - i == -2) {
-              y = 390;
+              y = 370;
             } else {
-              y = 350;
+              y = 330;
             }
             if (((i + 5 - nextId) % 5 == 3 && !toRight) || (toRight && (i + 5 - nextId) % 5 == 0)) {
               let bezierPath = [{
@@ -237,11 +211,11 @@
               params = {
                 bezier: bezierPath,
                 values: true,
-                scale: 0.3365
+                scale: 0.26
               }
             } else {
               params = {
-                scale: 0.3365,
+                scale: 0.26,
                 x: x,
                 y: y
               }
@@ -276,13 +250,13 @@
   }
   .item-trans-01 {
     background: url('../assets/star.png') center 0 no-repeat;
-    background-size: 80% auto;
+    background-size: 300px auto;
     position: relative;
   }
   .star-frames {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 1px;
+    left: 6px;
     right: 0;
     bottom: 0;
     text-align: center;
@@ -294,18 +268,18 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 10;
+    z-index: 210;
     background: #95000c url("../assets/bkg.jpg") 0 center no-repeat;
   }
   .item-detail-container {
     width: 100%;
     height: 100%;
-    background: url('../assets/star.png') center 2rem no-repeat;
-    background-size: 90% auto;
+    background: url('../assets/star.png') center 0 no-repeat;
+    background-size: 300px auto;
     position: relative;
   }
   .item-detail-container .star-frames {
-    margin-top: 2rem;
+    margin-top: 0;
   }
   .item-detail-img {
     margin: 0 auto 0;
@@ -314,8 +288,8 @@
     justify-content: center;
   }
   .item-detail-img img {
-    width: 20rem;
-    margin: 6rem 0;
+    width: 250px;
+    margin: 25px 0 20px;
   }
   .item-detail-title {
     margin: 0rem auto 0;
@@ -348,6 +322,7 @@
     width: 2.25rem;
     height: 2.25rem;
     margin: 2rem;
+    z-index: 8;
   }
   .page-container {
     width: 100%;
@@ -412,7 +387,7 @@
     width: 100%;
   }
   .item-clicks {
-    margin: 2rem auto 0;
+    margin: 0rem auto 0;
     width: 12rem;
     display: flex;
     align-items: center;
@@ -482,10 +457,10 @@
     position: absolute;
     left: 50%;
     top: 0;
-    margin-left: -104px;
-    margin-top: 40px;
+    margin-left: -125px;
+    margin-top: 25px;
   }
   .animation-imgs img {
-    width: 208px;
+    width: 250px;
   }
 </style>
