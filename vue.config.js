@@ -2,7 +2,7 @@ module.exports = {
 	devServer: {
 		proxy: {
 			'/api': {
-				target: 'http://localhost',
+				target: 'http://127.0.0.1/armani-double11-serve/',
 				ws: true,
 				changeOrigin: true
 			}

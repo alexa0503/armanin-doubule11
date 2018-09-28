@@ -1378,7 +1378,7 @@ export default {
           this.rotate * 90 +
           "deg)"
       };
-      let s = 80/325
+      let s = 80/300
       obj.thumb = {
         width: this.trueWidth*s + "px",
         height: this.trueHeight*s + "px",
@@ -1661,8 +1661,8 @@ export default {
   overflow: hidden;
   width: 100%;
   height: 100%;
-  outline: 1px solid #39f;
-  outline-color: rgba(51, 153, 255, 0.75);
+  /* outline: 1px solid #39f; */
+  /* outline-color: rgba(51, 153, 255, 0.75); */
   user-select: none;
 }
 

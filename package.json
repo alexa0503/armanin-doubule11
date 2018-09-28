@@ -12,6 +12,7 @@
     "axios": "^0.18.0",
     "babel-loader": "^8.0.2",
     "gsap": "^2.0.2",
+    "vconsole": "^3.2.0",
     "vue": "^2.5.17",
     "vue-cropper": "^0.4.0",
     "vue-router": "^3.0.1",

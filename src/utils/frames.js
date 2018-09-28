@@ -27,6 +27,6 @@ export const drawFrames = function({ id, width, height, imgs }) {
 			ctx.clearRect(0, 0, width, height);
 			ctx.drawImage(imgs[count], 0, 0, width, height);
 			count = (count + 1) % urls.length;
-		}, 30);
+		}, 60);
 	});
 };

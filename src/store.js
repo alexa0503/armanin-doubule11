@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 // import { fs } from 'fs';
+import { userUrl } from './utils/api';
+
 Vue.use(Vuex);
 export default new Vuex.Store({
 	state: {
@@ -10,7 +12,8 @@ export default new Vuex.Store({
 		canvas: null,
 		maxImgSize: 2000,
 		frameImgs: '',
-		goNow: false
+		goNow: false,
+		user: null
 	},
 	mutations: {
 		setItemId(state, id) {
@@ -18,6 +21,10 @@ export default new Vuex.Store({
 		},
 		image(state, image) {
 			state.image = image;
+		},
+		user(state, user) {
+			state.user = user;
+			localStorage.setItem('user', user);
 		},
 		loading(state, loading) {
 			state.loading = loading;
@@ -35,6 +42,15 @@ export default new Vuex.Store({
 	},
 	getters: {
 		itemId: (state) => state.itemId,
+		user: (state) => {
+			if (state.user) {
+				return state.user;
+			} else if (localStorage.getItem('user')) {
+				return localStorage.getItem('user');
+			} else {
+				return null;
+			}
+		},
 		loading: (state) => state.loading,
 		frameImgs: (state) => state.frameImgs,
 		goNow: (state) => state.goNow,
@@ -44,11 +60,36 @@ export default new Vuex.Store({
 				return state.canvas;
 			} else if (localStorage.getItem('canvas')) {
 				return localStorage.getItem('canvas');
+			} else {
+				return null;
 			}
 		},
 		maxImgSize: (state) => state.maxImgSize
 	},
 	actions: {
+		getUser({ commit, state }) {
+			return new Promise((resolve, reject) => {
+				if (!state.user) {
+					window.axios
+						.get(userUrl)
+						.then((res) => {
+							window.console.log(res);
+							if (res.data.ret == 0) {
+								commit('user', res.data.data);
+								return resolve(res.data.data);
+							} else {
+								return reject('error');
+							}
+						})
+						.catch((err) => {
+							return reject(err.response);
+						});
+				}
+			});
+		},
+		loading({ commit }, loading) {
+			commit('loading', loading);
+		},
 		chooseItem({ commit }, id) {
 			commit('setItemId', id);
 		},
@@ -71,6 +112,7 @@ export default new Vuex.Store({
 		},
 		filePicked({ commit }, files) {
 			commit('image', null);
+			commit('loading', true);
 			if (files[0] !== undefined) {
 				if (files[0].name.lastIndexOf('.') <= 0) {
 					return;
@@ -80,26 +122,28 @@ export default new Vuex.Store({
 				fr.addEventListener('load', () => {
 					var image = new Image();
 					image.onload = function() {
-						let width = this.width;
-						let height = this.height;
-						let h1 = 354;
-						let w1 = 325;
+						var width = this.width;
+						var height = this.height;
 						let maxImgSize;
-						let r1 = height / width;
-						let r2 = h1 / w1;
-
-						let w2 = window.screen.width || document.documentElement.width;
-						let h2 = r1 * w2;
-
-						// let r3 = h1 / height;
-						// let r4 = w1 / width;
-						if (r1 > r2) {
-							// maxImgSize = Math.ceil(h2 * r4) + 1;
-							maxImgSize = h2;
+						let screenWidth = window.screen.width || document.documentElement.width;
+						if (width > height) {
+							maxImgSize = Math.ceil(width / height * screenWidth);
 						} else {
-							// maxImgSize = Math.ceil(w2 * r3) + 1;
-							maxImgSize = w2;
+							maxImgSize = Math.ceil(height / width * screenWidth);
 						}
+						window.console.log(maxImgSize);
+						// let r1 = height / width;
+						// //let h1 = 354;
+						// //let w1 = 325;
+						// let w2 = window.screen.width || document.documentElement.width;
+						// let r2 = 300 / w2;
+						// let r3 = 300 / height;
+						// let r4 = w2 / width;
+						// if (r1 > r2) {
+						// 	maxImgSize = Math.ceil(height * r4) + 1;
+						// } else {
+						// 	maxImgSize = Math.ceil(width * r3) + 1;
+						// }
 						commit('maxImgSize', maxImgSize);
 						commit('loading', false);
 					};

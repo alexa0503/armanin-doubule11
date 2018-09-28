@@ -18,6 +18,7 @@
             <div v-for="(item,index) in itemSelects" :key="index" class="item-select"></div>
           </div>
         </div>
+        <div class="item-tip"><img src="@/assets/tip-item-01.png" width="156" />></div>
         <!-- <div class="item-dots">
           <i v-for="(item,index) in itemDots" :key="index" :class="item" />
         </div> -->
@@ -60,7 +61,7 @@
         animationClass: null,
         detailSeen: false,
         hasCompleted: true,
-        time: 0.6
+        time: 0.7
       };
     },
     computed: {
@@ -104,7 +105,8 @@
     },
     created() {},
     mounted() {
-      this.slide(false)
+      // this.slide(false)
+      this.initSild()
       let imgs = this.imgs
       let id = "frames"
       let width = width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -118,6 +120,20 @@
       })
     },
     methods: {
+      initSild(){
+        let container = document.querySelector('.animation-imgs')
+        let nodes = container.childNodes
+        let currentIndex = this.currentIndex
+        for (let i = 0; i < nodes.length; i++) {
+          if( currentIndex != i+1){
+            TweenLite.to(nodes[i].childNodes[0], this.time, {
+              x: (i + 5 - currentIndex) % 5 * 80 - 120,
+              y: (currentIndex - i == 3 || currentIndex - i == 4 || currentIndex - i == -1 || currentIndex - i == -2) ? 370 : 330,
+              scale:0.26
+            });
+          }
+        }
+      },
       showDetail() {
         this.detailSeen = true;
         let id = 'detail-frames'
@@ -180,7 +196,6 @@
             }
             TweenLite.to(nodes[i].childNodes[0], this.time, {
               bezier: bezierPath,
-              values: true,
               scale: 1
             })
           } else {
@@ -210,7 +225,6 @@
               }
               params = {
                 bezier: bezierPath,
-                values: true,
                 scale: 0.26
               }
             } else {
@@ -462,5 +476,9 @@
   }
   .animation-imgs img {
     width: 250px;
+  }
+  .item-tip {
+    text-align: center;
+    margin-top: 1.8rem;
   }
 </style>

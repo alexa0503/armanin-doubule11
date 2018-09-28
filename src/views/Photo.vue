@@ -1,11 +1,12 @@
 <template>
     <v-container fluid>
-        <div v-if="!photoed" class="photo-tip">
-            <img :src="textImg" class="photo-text-img">
-            <img src="@/assets/title-photo.png" class="photo-title-img" @click="pickFile">
-            <input ref="image" type="file" style="display: none" accept="image/*" @change="onFilePicked($event)">
-        </div>
-        <div v-if="!photoed" class="photo-uri"><img src="@/assets/uri-03.png" class="img-fluid"></div>
+        <div v-if="!photoed" class="photo-uri">
+            <div class="photo-tip">
+                <img :src="textImg" class="photo-text-img">
+                <img src="@/assets/title-photo.png" class="photo-title-img" @click="pickFile">
+                <input ref="image" type="file" style="display: none" accept="image/*" @change="onFilePicked($event)">
+            </div>
+            <img src="@/assets/uri-03.png" class="img-fluid"></div>
         <div v-if="photoed" class="photo-image">
             <vueCropper ref="cropper" :class="filterClass" :img="image" :output-size="option.size" :output-type="option.outputType" :info="false" :full="option.full" :can-move="option.canMove" :can-move-box="option.canMoveBox" :original="option.original" :auto-crop="option.autoCrop"
                 :auto-crop-width="option.autoCropWidth" :auto-crop-height="option.autoCropHeight" :fixed-box="option.fixedBox" :center-box="option.centerBox" :max-img-size="maxImgSize || option.maxImgSize" :fixed="false" :high="true" @realTime="realTime" @imgLoad="imgLoad"
@@ -23,7 +24,7 @@
         <div class="photo-image-preview" v-if="photoed">
             <img :src="image" :style="previews.img">
         </div>
-        <div class="photo-image-preview-mask" v-if="photoed"></div>
+        <div id="photo-image-preview-mask" class="photo-image-preview-mask" v-if="photoed"></div>
     </v-container>
 </template>
 <script>
@@ -52,9 +53,9 @@
                     canMoveBox: false,
                     original: true,
                     autoCrop: true,
-                    autoCropWidth: 325,
+                    autoCropWidth: 300,
+                    autoCropHeight: 300,
                     centerBox: true,
-                    autoCropHeight: 354,
                     // fixedNumber: '[1:1]',
                     fixedBox: true
                 }
@@ -70,6 +71,8 @@
                 return require(`@/assets/text-photo-0${this.itemId}.png`);
             }
         },
+        mounted() {
+        },
         methods: {
             upload() {
                 this.$refs.cropper.getCropData((data) => {
@@ -84,14 +87,14 @@
                 var ctx = canvas.getContext("2d");
                 // let ratio = self.getPixelRatio(ctx);
                 canvas.width = 750;
-                canvas.height = 818;
+                canvas.height = 750;
                 var imglen = imgsrcArray.length;
                 (function f(n) {
                     if (n < imglen) {
                         var img = new Image();
                         img.crossOrigin = "Anonymous"; //解决跨域问题
                         img.onload = function() {
-                            ctx.drawImage(img, 0, 0, 750, 818);
+                            ctx.drawImage(img, 0, 0, 750, 750);
                             if (n == 0) {
                                 let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
                                 let pixelData = imageData.data
@@ -135,9 +138,13 @@
                 let files = e.target.files;
                 this.photoed = true
                 this.$store.dispatch("filePicked", files);
+                setTimeout(() => {
+                    let screenHeight = window.screen.height || document.documentElement.height;
+                    document.getElementById('photo-image-preview-mask').style.height = screenHeight - 360 + 'px'
+                }, 200);
             },
             realTime(data) {
-                 this.previews = data
+                this.previews = data
             },
             imgLoad() {}
         }
@@ -146,15 +153,23 @@
 <style scoped>
     .photo-tip {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 27.8rem;
+        top: -16rem;
+        left: 2rem;
+        width: 28.3rem;
         height: 24rem;
-        margin: 2rem 0 0 2rem;
+        margin: 5rem 0 0 0;
         background: url("../assets/tip-photo-01.png") 0 0 no-repeat;
         background-size: 27.8rem auto;
         z-index: 3;
         text-align: center;
+    }
+    .photo-tip .photo-text-img {
+        margin-top: 2rem;
+        width: 25.5rem;
+    }
+    .photo-tip .photo-title-img {
+        margin-top: 0.5rem;
+        width: 10.2rem;
     }
     .photo-image {
         position: absolute;
@@ -162,8 +177,8 @@
         left: 0;
         right: 0;
         z-index: 9;
-        height: 394px;
-        background: #95000c;
+        height: 360px;
+        /* background: #95000c; */
     }
     .photo-image-preview {
         position: fixed;
@@ -172,11 +187,12 @@
         right: 0;
         bottom: 0;
         z-index: 4;
+        padding-top: 12px;
+        padding-left: 12px;
         background: rgba(0, 0, 0, 0.5);
     }
     .photo-image-preview-mask {
         position: fixed;
-        top: 0;
         left: 0;
         right: 0;
         bottom: 0;
@@ -205,7 +221,7 @@
     }
     .photo-preview {
         width: 80px;
-        height: 87px;
+        height: 80px;
         overflow: hidden;
         border: 2px solid #94010c;
         display: block;
@@ -220,14 +236,6 @@
         text-align: center;
         margin-bottom: 2rem;
     }
-    .photo-tip .photo-text-img {
-        margin-top: 2rem;
-        width: 27.5rem;
-    }
-    .photo-tip .photo-title-img {
-        margin-top: 2rem;
-        width: 6.7rem;
-    }
     .photo-preview {
         position: relative;
     }
@@ -239,7 +247,7 @@
     }
     .photo-uri {
         position: absolute;
-        bottom: 0;
+        bottom: -3px;
         left: 0;
         right: 0;
         z-index: 1;

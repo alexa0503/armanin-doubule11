@@ -1,13 +1,11 @@
 <template>
   <v-container v-swipeup="{fn:swipeup,name:'上划'}" fluid>
     <div class="tip">
-      <img src="@/assets/text-index-02.png" class="tip-text">
-      <div class="tip-title" @click="introSeen = true">
-        <img src="@/assets/text-index-01.png">
-      </div>
+      <img width="232" @click="introSeen = true" src="@/assets/text-index-02.png" class="tip-text">
+      <div class="tip-hand"><img src="@/assets/icon-hand.png" width="27" /></div>
       <!-- <div class="tip-close">
-          <img src="@/assets/icon-close-01.png" />
-        </div> -->
+            <img src="@/assets/icon-close-01.png" />
+          </div> -->
     </div>
     <div class="star">
       <img src="@/assets/star.png">
@@ -33,11 +31,6 @@
   import {
     drawFrames
   } from "../utils/frames"
-  import {
-    TweenLite,
-    TweenMax,
-    Circ
-  } from "gsap/TweenMax";
   export default {
     name: "App",
     data() {
@@ -51,6 +44,7 @@
       })
     },
     mounted() {
+      // this.$store.dispatch('loading', true)
       let imgs = this.imgs
       let id = "frames"
       let width = width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -61,16 +55,6 @@
         height,
         imgs
       })
-      const obj = document.querySelector('.icon-arrow')
-      TweenMax.to(".icon-arrow", 0.5, {
-				y: "10px",
-				repeat: -1,
-				yoyo: true,
-				// onRepeat: onRepeat,
-				repeatDelay: 0,
-				ease: Linear.easeNone
-			});
-
       // TweenLite.to(obj, 1, {y: 10,repeat:-1, yoyo:true})
     },
     methods: {
@@ -129,9 +113,18 @@
     text-align: center;
     padding-bottom: 3rem;
     z-index: 5;
+    animation: updown1 .6s infinite alternate;
   }
   .arrow-down img {
     width: 5.4rem;
+  }
+  @keyframes updown1 {
+    from {
+      bottom: 4px;
+    }
+    to {
+      bottom: 20px;
+    }
   }
   .intro img {
     width: 100%;
@@ -153,10 +146,25 @@
     width: 26rem;
     height: 16rem;
     margin: 2rem 2rem 0 0;
-    background: url("../assets/tip-01.png") 0 0 no-repeat;
+    background: url("../assets/tip-index-01.png") 0 0 no-repeat;
     background-size: 26rem auto;
     z-index: 3;
     text-align: center;
+  }
+  .tip .tip-hand {
+    position: absolute;
+    right: 7rem;
+    top: 1.5rem;
+    animation: rightleft  .6s infinite alternate;
+
+  }
+  @keyframes rightleft {
+    from {
+      right: 7.5rem;
+    }
+    to {
+      right: 6.5rem;
+    }
   }
   .tip .tip-text {
     width: 20.8rem;
@@ -167,9 +175,6 @@
     top: 0;
     left: 0;
     margin: 2rem 0 0 11rem;
-  }
-  .tip .tip-title img {
-    width: 8.9rem;
   }
   .tip .tip-close {
     position: absolute;

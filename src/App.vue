@@ -3,16 +3,27 @@
     <transition :name="transitionName">
       <router-view/>
     </transition>
+    <div class="loading" v-if="loading">
+      <v-progress-circular :width="7" color="red" :size="70" indeterminate></v-progress-circular>
+    </div>
   </v-app>
 </template>
 
 <script>
+  import {
+    mapGetters
+  } from "vuex";
   export default {
     name: "App",
     data() {
       return {
         transitionName: ''
       };
+    },
+    computed: {
+      ...mapGetters({
+        loading: "loading",
+      })
     },
     watch: {
       '$route' (to, from) {
@@ -72,7 +83,6 @@
         });
       }
       overscroll(document.querySelector('#app'));
-      
       document.addEventListener('touchmove', function(evt) {
         if (!evt._isScroller) {
           evt.preventDefault();
@@ -86,17 +96,30 @@
 
 <style>
   /* body {
-          font-size: 65% !important;
-        } */
+            font-size: 65% !important;
+          } */
   .container {
     padding: 0!important;
     position: relative;
     width: 100%;
     height: 100%;
-    transform: translate(0, 0);
   }
   .img-fluid {
     width: 100%;
+  }
+  .loading {
+    text-align: center;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    left: 0;
+    right: 0;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   #app {
     font-family: "Avenir", Helvetica, Arial, sans-serif;
