@@ -8,13 +8,11 @@ import store from './store';
 import './stylus/app.styl';
 import { loginUrl } from './utils/api';
 window.axios = require('axios');
-// window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-// window.axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
-// window.axios.defaults.withCredentials = true;
+
 // axios 拦截器
 window.axios.interceptors.request.use(
 	(config) => {
-		// config.withCredentials = true;
+		config.withCredentials = true;
 		config.headers['X-Requested-With'] = 'XMLHttpRequest';
 		config.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
 		return config;

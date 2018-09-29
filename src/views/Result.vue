@@ -5,16 +5,16 @@
       <img :src="canvas" >
     </div>
     <div class="result-footer" v-if="!goNow">
-      <div class="mt-4"><img 
+      <div class="mt-1"><img 
         src="@/assets/text-result.png" 
         width="250" ></div>
-      <div class="mt-3"><img 
+      <div class="mt-1"><img 
         src="@/assets/button-receive.png" 
         width="186" 
         @click="receive" ></div>
     </div>
     <div class="result-footer" v-else>
-        <img @click="$router.replace({name:'list',params:{id:itemId,had:'y'}})" class="mt-4" src="@/assets/button-return.png" width="126" />
+        <img @click="$router.push({name:'list',params:{id:itemId,had:'y'}})" class="mt-4" src="@/assets/button-return.png" width="126" />
     </div>
     <div class="form" v-if="seen">
       <div class="form-container">
@@ -211,7 +211,7 @@
     }
     .result-footer {
         text-align: center;
-        margin: 2rem 0;
+        margin: 0rem 0;
     }
 </style>
 

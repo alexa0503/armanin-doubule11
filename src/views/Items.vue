@@ -3,14 +3,12 @@
     <div class="page">
       <div v-swipeleft="{fn:swipeleft,name:'左滑'}" v-swiperight="{fn:swiperight,name:'右滑'}" :class="animationClass" class="page-container">
         <div class="item-trans">
-          <div class="item-trans-01">
-            <div class="item"></div>
-            <div class="item-text"><img :src="require(`@/assets/text-item-0${currentIndex}.png`)"></div>
-            <div class="star-frames"><canvas id="frames"></canvas></div>
-          </div>
+          <div class="item"></div>
+          <div class="item-text"><img :src="require(`@/assets/text-item-0${currentIndex}.png`)"></div>
+          <div class="star-frames"><canvas id="frames"></canvas></div>
         </div>
         <div class="item-clicks">
-          <div><img src="@/assets/icon-comment.png" @click="$router.replace({name:'list',params:{id:currentIndex}})"></div>
+          <div><img src="@/assets/icon-comment.png" @click="$router.push({name:'list',params:{id:currentIndex}})"></div>
           <div><img @click="showDetail" src="@/assets/icon-heart.png"></div>
         </div>
         <div class="item-selects">
@@ -31,8 +29,8 @@
         </div>
         <div class="item-detail-title"><img :src="itemTitle" class="mb-2"><img src="@/assets/text-item-detail.png" class="mt-2"></div>
         <div class="item-detail-buttons">
-          <img src="@/assets/btn-photo.png" @click="$router.replace({name:'photo'})">
-          <img src="@/assets/btn-reason.png" @click="$router.replace({name:'list',params:{id:currentIndex}})">
+          <img src="@/assets/btn-photo.png" @click="$router.push({name:'photo'})">
+          <img src="@/assets/btn-reason.png" @click="$router.push({name:'list',params:{id:currentIndex}})">
         </div>
         <div class="star-frames"><canvas id="detail-frames"></canvas></div>
       </div>
@@ -61,7 +59,9 @@
         animationClass: null,
         detailSeen: false,
         hasCompleted: true,
-        time: 0.7
+        time: 0.7,
+        posY1: 295,
+        posY2: 335
       };
     },
     computed: {
@@ -105,7 +105,6 @@
     },
     created() {},
     mounted() {
-      // this.slide(false)
       this.initSild()
       let imgs = this.imgs
       let id = "frames"
@@ -121,6 +120,8 @@
     },
     methods: {
       initSild(){
+        let posY1 = this.posY1
+        let posY2 = this.posY2
         let container = document.querySelector('.animation-imgs')
         let nodes = container.childNodes
         let currentIndex = this.currentIndex
@@ -128,7 +129,7 @@
           if( currentIndex != i+1){
             TweenLite.to(nodes[i].childNodes[0], this.time, {
               x: (i + 5 - currentIndex) % 5 * 80 - 120,
-              y: (currentIndex - i == 3 || currentIndex - i == 4 || currentIndex - i == -1 || currentIndex - i == -2) ? 370 : 330,
+              y: (currentIndex - i == 3 || currentIndex - i == 4 || currentIndex - i == -1 || currentIndex - i == -2) ? posY2 : posY1,
               scale:0.26
             });
           }
@@ -162,6 +163,9 @@
           return;
         }
         let nextId
+        
+        let posY1 = this.posY1
+        let posY2 = this.posY2
         if (toRight) {
           nextId = this.currentIndex - 1;
           if (nextId < 1) {
@@ -202,9 +206,9 @@
             let params, x, y
             x = (i + 5 - nextId) % 5 * 80 - 120;
             if (nextId - i == 3 || nextId - i == 4 || nextId - i == -1 || nextId - i == -2) {
-              y = 370;
+              y = posY2;
             } else {
-              y = 330;
+              y = posY1;
             }
             if (((i + 5 - nextId) % 5 == 3 && !toRight) || (toRight && (i + 5 - nextId) % 5 == 0)) {
               let bezierPath = [{
@@ -260,9 +264,6 @@
     overflow-x: hidden;
   }
   .item-trans {
-    height: 36rem;
-  }
-  .item-trans-01 {
     background: url('../assets/star.png') center 0 no-repeat;
     background-size: 300px auto;
     position: relative;
@@ -390,7 +391,7 @@
     width: 100%;
   }
   .item-text {
-    margin: 2rem auto 0;
+    margin: 0rem auto 0;
     width: 23rem;
     display: flex;
     align-items: center;
@@ -401,7 +402,7 @@
     width: 100%;
   }
   .item-clicks {
-    margin: 0rem auto 0;
+    margin: 10px auto 0;
     width: 12rem;
     display: flex;
     align-items: center;
@@ -412,7 +413,7 @@
     width: 5rem;
   }
   .item-selects {
-    margin: 0 auto 0;
+    margin: -10px auto 0;
     width: 320px;
     height: 11rem;
     display: flex;

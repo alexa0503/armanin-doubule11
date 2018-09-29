@@ -124,7 +124,7 @@
                     } else {
                         self.canvas = canvas.toDataURL("image/png", 1);
                         self.$store.dispatch("upload", self.canvas).then(() => {
-                            self.$router.replace({
+                            self.$router.push({
                                 name: 'result'
                             })
                         })
@@ -140,7 +140,7 @@
                 this.$store.dispatch("filePicked", files);
                 setTimeout(() => {
                     let screenHeight = window.screen.height || document.documentElement.height;
-                    document.getElementById('photo-image-preview-mask').style.height = screenHeight - 360 + 'px'
+                    document.getElementById('photo-image-preview-mask').style.height = screenHeight - 359 + 'px'
                 }, 200);
             },
             realTime(data) {
@@ -153,11 +153,10 @@
 <style scoped>
     .photo-tip {
         position: absolute;
-        top: -16rem;
+        bottom: 28rem;
         left: 2rem;
         width: 28.3rem;
         height: 24rem;
-        margin: 5rem 0 0 0;
         background: url("../assets/tip-photo-01.png") 0 0 no-repeat;
         background-size: 27.8rem auto;
         z-index: 3;
@@ -197,7 +196,7 @@
         right: 0;
         bottom: 0;
         z-index: 5;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.45);
     }
     .photo-image-preview img {
         margin-left: 25px;
@@ -214,7 +213,7 @@
         position: absolute;
         left: 0;
         right: 0;
-        top: 38rem;
+        top: 36rem;
         display: flex;
         margin: 0 8rem;
         justify-content: space-around;
@@ -231,7 +230,7 @@
         z-index: 9;
         position: absolute;
         left: 0;
-        top: 46rem;
+        top: 44rem;
         right: 0;
         text-align: center;
         margin-bottom: 2rem;

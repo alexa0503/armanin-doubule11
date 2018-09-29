@@ -21,7 +21,7 @@
         <div v-if="detailSeen" class="item-detail">
             <div class="item-detail-content">
                 <div class="item-detail-topper">
-                    <div v-if="!editing"><img src="@/assets/icon-close-03.png" width="13" @click="closeDetail"></div>
+                    <div><img src="@/assets/icon-close-03.png" width="13" @click="closeDetail"></div>
                     <div v-if="!editing"><img src="@/assets/icon-edit.png" width="20" @click="goTo"></div>
                 </div>
                 <div class="item-detail-avatar mb-2">
@@ -44,8 +44,8 @@
         <div v-if="detailSeen" class="item-detail-mask"></div>
         <div class="editor-succeed" v-if="goNow">
             <div class="mb-4">先去和明星产品拍摄试镜<br/>再来评论区打call！</div>
-            <!-- <div class="mt-4"><img src="@/assets/button-lottery.png" width="175" @click="$router.replace({name:'photo'})" /></div> -->
-            <div class="mt-4"><img @click="$router.replace({name:'photo'})" src="@/assets/button-go-now.png" width="150" /></div>
+            <!-- <div class="mt-4"><img src="@/assets/button-lottery.png" width="175" @click="$router.push({name:'photo'})" /></div> -->
+            <div class="mt-4"><img @click="$router.push({name:'photo'})" src="@/assets/button-go-now.png" width="150" /></div>
         </div>
         <div class="tip-upload-succed" v-if="succeed">
             <div class="mb-2"><img src="@/assets/icon-upload-succed.png" width="75" /></div>
@@ -96,12 +96,11 @@
                 this.stars = data
                 let current = this.$router.history.current
                 if (current.params && current.params.had == 'y') {
+                    this.editing = true
                     this.selectItem(0)
-                    console.log(this.user)
                     this.currentStar.avatar = this.user.avatar
                     this.currentStar.nickname = this.user.nickname
                     this.currentStar.img = this.$store.getters.canvas
-                    this.editing = true
                 }
             }).catch((err) => {
                 this.$store.commit('loading', false)
@@ -128,7 +127,7 @@
             },
             logoClose: function() {
                 let name = this.fromRouterName
-                this.$router.replace({
+                this.$router.push({
                     name: name
                 })
             },

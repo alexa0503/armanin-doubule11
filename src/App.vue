@@ -131,7 +131,6 @@
     background-size: 100% auto;
     overflow: auto;
     overflow-x: hidden;
-    max-width: 450px;
   }
   .swipe-enter-active {
     /* transition: opacity .5s; */

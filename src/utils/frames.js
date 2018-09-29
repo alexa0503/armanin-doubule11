@@ -1,4 +1,6 @@
+import store from './../store';
 function loadImgs(urls, callback) {
+	store.dispatch('loading', true);
 	var count = urls.length;
 	var result = [];
 	for (var i = 0; i < urls.length; i++) {
@@ -6,7 +8,10 @@ function loadImgs(urls, callback) {
 		result.push(img);
 		img.src = urls[i];
 		img.onload = function() {
-			if (--count == 0) callback(urls, result);
+			if (--count == 0) {
+				store.dispatch('loading', false);
+				callback(urls, result);
+			}
 		};
 	}
 }

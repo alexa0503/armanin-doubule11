@@ -4,8 +4,8 @@
       <img width="232" @click="introSeen = true" src="@/assets/text-index-02.png" class="tip-text">
       <div class="tip-hand"><img src="@/assets/icon-hand.png" width="27" /></div>
       <!-- <div class="tip-close">
-            <img src="@/assets/icon-close-01.png" />
-          </div> -->
+                  <img src="@/assets/icon-close-01.png" />
+                </div> -->
     </div>
     <div class="star">
       <img src="@/assets/star.png">
@@ -20,7 +20,7 @@
       <div class="intro-close" @click="introSeen = false"><img src="@/assets/icon-close-02.png"></div>
     </div>
     <div v-if="!introSeen" class="arrow-down">
-      <img class="icon-arrow" src="@/assets/icon-arrow-down.png" @click="$router.replace({name:'invite'})">
+      <img class="icon-arrow" src="@/assets/icon-arrow-down.png" @click="$router.push({name:'invite'})">
     </div>
   </v-container>
 </template>
@@ -43,30 +43,38 @@
         imgs: "frameImgs"
       })
     },
+    watch: {
+      '$route' (to, from) {
+        this.drawFrames()
+      },
+    },
     mounted() {
+      this.drawFrames()
       // this.$store.dispatch('loading', true)
-      let imgs = this.imgs
-      let id = "frames"
-      let width = width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      let height = width
-      drawFrames({
-        id,
-        width,
-        height,
-        imgs
-      })
       // TweenLite.to(obj, 1, {y: 10,repeat:-1, yoyo:true})
     },
     methods: {
+      drawFrames() {
+        let imgs = this.imgs
+        let id = "frames"
+        let width = width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        let height = width
+        drawFrames({
+          id,
+          width,
+          height,
+          imgs
+        })
+      },
       swipeup() {
         if (!this.introSeen) {
-          this.$router.replace({
+          this.$router.push({
             name: 'invite'
           })
         }
       },
       // invite() {
-      //   this.$router.replace({name:"invite"})
+      //   this.$router.push({name:"invite"})
       // }
     }
   };
@@ -155,8 +163,7 @@
     position: absolute;
     right: 7rem;
     top: 1.5rem;
-    animation: rightleft  .6s infinite alternate;
-
+    animation: rightleft .6s infinite alternate;
   }
   @keyframes rightleft {
     from {

@@ -2,11 +2,11 @@
   <v-container fluid v-swipeup="{fn:swipeup,name:'上划'}">
     <div class="uri-invite"><img src="@/assets/uri-02.png" class="img-fluid">
       <div class="tip-invite">
-        <img src="@/assets/button-invite-01.png" width="102" class="mt-tip" @click="$router.replace({name:'items'})">
+        <img src="@/assets/button-invite-01.png" width="102" class="mt-tip" @click="$router.push({name:'items'})">
       </div>
     </div>
     <div class="arrow-down">
-      <img class="icon-arrow" src="@/assets/icon-arrow-down.png" @click="$router.replace({name:'invite'})">
+      <img class="icon-arrow" src="@/assets/icon-arrow-down.png" @click="$router.push({name:'invite'})">
     </div>
   </v-container>
 </template>
@@ -20,7 +20,7 @@
     mounted() {},
     methods: {
       swipeup() {
-        this.$router.replace({
+        this.$router.push({
           name: 'items'
         })
       }
