@@ -1,9 +1,8 @@
 <template>
     <v-container fluid>
         <div v-if="!photoed" class="photo-uri">
-            <div class="photo-tip">
-                <img :src="textImg" class="photo-text-img">
-                <img src="@/assets/title-photo.png" class="photo-title-img" @click="pickFile">
+            <div class="photo-tip" v-bind:class="topTip">
+                <img src="@/assets/button-photo-01.png" class="photo-title-img" @touchend="pickFile">
                 <input ref="image" type="file" style="display: none" accept="image/*" @change="onFilePicked($event)">
             </div>
             <img src="@/assets/uri-03.png" class="img-fluid"></div>
@@ -11,12 +10,12 @@
             <vueCropper ref="cropper" :class="filterClass" :img="image" :output-size="option.size" :output-type="option.outputType" :info="false" :full="option.full" :can-move="option.canMove" :can-move-box="option.canMoveBox" :original="option.original" :auto-crop="option.autoCrop"
                 :auto-crop-width="option.autoCropWidth" :auto-crop-height="option.autoCropHeight" :fixed-box="option.fixedBox" :center-box="option.centerBox" :max-img-size="maxImgSize || option.maxImgSize" :fixed="false" :high="true" @realTime="realTime" @imgLoad="imgLoad"
             />
-            <div class="photo-star"><img src="@/assets/button-star.png" width="110" @click="upload"></div>
+            <div class="photo-star"><img src="@/assets/button-star.png" width="110" @touchend="upload"></div>
             <div class="photo-choose">
-                <div class="photo-preview"><img :src="image" :style="previews.thumb" class="filter-01" @click="filterClass = 'filter-01'">
+                <div class="photo-preview"><img :src="image" :style="previews.thumb" class="filter-01" @touchend="filterClass = 'filter-01'">
                     <div v-if="filterClass == 'filter-01'" class="photo-choosed"><img src="@/assets/icon-choosed.png" width="20"></div>
                 </div>
-                <div class="photo-preview"><img :src="image" :style="previews.thumb" class="filter-02" @click="filterClass = 'filter-02'">
+                <div class="photo-preview"><img :src="image" :style="previews.thumb" class="filter-02" @touchend="filterClass = 'filter-02'">
                     <div v-if="filterClass == 'filter-02'" class="photo-choosed"><img width="20" src="@/assets/icon-choosed.png"></div>
                 </div>
             </div>
@@ -65,14 +64,17 @@
             ...mapGetters({
                 itemId: "itemId",
                 image: "image",
-                maxImgSize: "maxImgSize"
+                maxImgSize: "maxImgSize",
+                
             }),
             textImg: function() {
                 return require(`@/assets/text-photo-0${this.itemId}.png`);
+            },
+            topTip: function(){
+                return 'top-tip-0' + this.itemId;
             }
         },
-        mounted() {
-        },
+        mounted() {},
         methods: {
             upload() {
                 this.$refs.cropper.getCropData((data) => {
@@ -85,18 +87,18 @@
                 var imgsrcArray = [data, bkg];
                 var canvas = document.createElement("canvas");
                 var ctx = canvas.getContext("2d");
-                // let ratio = self.getPixelRatio(ctx);
+                let ratio = self.getPixelRatio(ctx);
                 canvas.width = 750;
-                canvas.height = 750;
+                canvas.height = 922;
                 var imglen = imgsrcArray.length;
                 (function f(n) {
                     if (n < imglen) {
                         var img = new Image();
                         img.crossOrigin = "Anonymous"; //解决跨域问题
                         img.onload = function() {
-                            ctx.drawImage(img, 0, 0, 750, 750);
                             if (n == 0) {
-                                let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+                                ctx.drawImage(img, 0, 172, 750, 750);
+                                let imageData = ctx.getImageData(0, 172, canvas.width, canvas.height)
                                 let pixelData = imageData.data
                                 for (var i = 0; i < canvas.width * canvas.height; i++) {
                                     var r = pixelData[i * 4 + 0];
@@ -116,7 +118,9 @@
                                         // pixelData[i*4+2] = (b-g-r)*3/2;
                                     }
                                 }
-                                ctx.putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
+                                ctx.putImageData(imageData, 0, 172, 0, 0, 750, 750);
+                            } else {
+                                ctx.drawImage(img, 0, 0, 750, 922);
                             }
                             f(n + 1);
                         };
@@ -130,6 +134,12 @@
                         })
                     }
                 })(0);
+            },
+            getPixelRatio() {
+                if (window.devicePixelRatio && window.devicePixelRatio > 1) {
+                    return window.devicePixelRatio;
+                }
+                return 1;
             },
             pickFile() {
                 this.$refs["image"].click();
@@ -155,20 +165,52 @@
         position: absolute;
         bottom: 28rem;
         left: 2rem;
-        width: 28.3rem;
+        width: 25rem;
         height: 24rem;
-        background: url("../assets/tip-photo-01.png") 0 0 no-repeat;
-        background-size: 27.8rem auto;
         z-index: 3;
         text-align: center;
+        padding-top: 10rem;
+    }
+    
+    .top-tip-01 {
+        background: url("../assets/tip-top-01.png") 0 0 no-repeat;
+        background-size: 25rem auto;
+        padding-top: 10rem;
+    }
+    .top-tip-02 {
+        background: url("../assets/tip-top-02.png") 0 0 no-repeat;
+        background-size: 19rem auto;
+        width: 19rem;
+        left: 6rem;
+        bottom: 26rem;
+
+    }
+    .top-tip-03 {
+        background: url("../assets/tip-top-03.png") 0 0 no-repeat;
+        background-size: 17rem auto;
+        width: 17rem;
+        left: 6rem;
+        padding-top: 12.1rem;
+    }
+    .top-tip-04 {
+        background: url("../assets/tip-top-04.png") 0 0 no-repeat;
+        background-size: 22rem auto;
+        width: 22rem;
+        padding-top: 13.7rem;
+    }
+    .top-tip-05 {
+        background: url("../assets/tip-top-05.png") 0 0 no-repeat;
+        background-size: 20.8rem auto;
+        width: 20.8rem;
+        padding-top: 11.2rem;
+        left: 4rem;
     }
     .photo-tip .photo-text-img {
         margin-top: 2rem;
         width: 25.5rem;
     }
     .photo-tip .photo-title-img {
-        margin-top: 0.5rem;
-        width: 10.2rem;
+        width: 10.7rem;
     }
     .photo-image {
         position: absolute;

@@ -46,8 +46,14 @@ Vue.filter('stringLimit', function(value, len = 22) {
 	}
 	return value;
 });
-let debug = true;
-if (!store.getters.user || debug) {
+// if (process.env.NODE_ENV === 'development') {
+// 	store.state.user = {
+// 		nickname: '小A',
+// 		avatar: require('@/assets/avatar-01.png'),
+// 		img: null
+// 	};
+// }
+if (!store.getters.user) {
 	store.dispatch('getUser').then(() => {}).catch(() => {
 		// alert('授权失败' + err);
 	});

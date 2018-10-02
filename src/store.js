@@ -13,7 +13,9 @@ export default new Vuex.Store({
 		maxImgSize: 2000,
 		frameImgs: '',
 		goNow: false,
-		user: null
+		user: null,
+		tipSeen: true,
+		comment: ''
 	},
 	mutations: {
 		setItemId(state, id) {
@@ -22,15 +24,25 @@ export default new Vuex.Store({
 		image(state, image) {
 			state.image = image;
 		},
+		comment(state, comment) {
+			state.comment = comment;
+		},
+		tipSeen(state, tipSeen) {
+			state.tipSeen = tipSeen;
+		},
 		user(state, user) {
 			state.user = user;
-			localStorage.setItem('user', user);
+			// localStorage.setItem('user', user);
 		},
 		loading(state, loading) {
 			state.loading = loading;
 		},
 		canvas(state, canvas) {
-			localStorage.setItem('canvas', canvas);
+			if (canvas == null) {
+				localStorage.removeItem('canvas');
+			} else {
+				localStorage.setItem('canvas', canvas);
+			}
 			state.canvas = canvas;
 		},
 		maxImgSize(state, maxImgSize) {
@@ -42,15 +54,9 @@ export default new Vuex.Store({
 	},
 	getters: {
 		itemId: (state) => state.itemId,
-		user: (state) => {
-			if (state.user) {
-				return state.user;
-			} else if (localStorage.getItem('user')) {
-				return localStorage.getItem('user');
-			} else {
-				return null;
-			}
-		},
+		tipSeen: (state) => state.tipSeen,
+		comment: (state) => state.comment,
+		user: (state) => state.user,
 		loading: (state) => state.loading,
 		frameImgs: (state) => state.frameImgs,
 		goNow: (state) => state.goNow,
@@ -67,13 +73,15 @@ export default new Vuex.Store({
 		maxImgSize: (state) => state.maxImgSize
 	},
 	actions: {
+		comment({ commit }, payload) {
+			commit('comment', payload);
+		},
 		getUser({ commit, state }) {
 			return new Promise((resolve, reject) => {
 				if (!state.user) {
 					window.axios
 						.get(userUrl)
 						.then((res) => {
-							window.console.log(res);
 							if (res.data.ret == 0) {
 								commit('user', res.data.data);
 								return resolve(res.data.data);
@@ -93,7 +101,11 @@ export default new Vuex.Store({
 		chooseItem({ commit }, id) {
 			commit('setItemId', id);
 		},
-		goNow({ state }, g) {
+		goNow({ commit, state }, g) {
+			commit('canvas', null);
+			if (state.user) {
+				state.user.img = null;
+			}
 			state.goNow = g;
 		},
 		initFrames({ commit }, imgs) {
@@ -131,7 +143,6 @@ export default new Vuex.Store({
 						} else {
 							maxImgSize = Math.ceil(height / width * screenWidth);
 						}
-						window.console.log(maxImgSize);
 						// let r1 = height / width;
 						// //let h1 = 354;
 						// //let w1 = 325;

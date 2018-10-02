@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid>
-    <div class="page">
+  <v-container  justify-center column fill-height fluid>
+    <v-flex relative xs12>
       <div v-swipeleft="{fn:swipeleft,name:'左滑'}" v-swiperight="{fn:swiperight,name:'右滑'}" :class="animationClass" class="page-container">
         <div class="item-trans">
           <div class="item"></div>
@@ -8,37 +8,38 @@
           <div class="star-frames"><canvas id="frames"></canvas></div>
         </div>
         <div class="item-clicks">
-          <div><img src="@/assets/icon-comment.png" @click="$router.push({name:'list',params:{id:currentIndex}})"></div>
-          <div><img @click="showDetail" src="@/assets/icon-heart.png"></div>
+          <div><img @touchend="showDetail" src="@/assets/icon-heart-03.png"></div>
+          <div><img src="@/assets/icon-comment-03.png" @touchend="$router.push({name:'list',params:{id:currentIndex}})"></div>
         </div>
         <div class="item-selects">
           <div class="item-selects-container">
             <div v-for="(item,index) in itemSelects" :key="index" class="item-select"></div>
           </div>
         </div>
-        <div class="item-tip"><img src="@/assets/tip-item-01.png" width="156" />></div>
         <!-- <div class="item-dots">
-          <i v-for="(item,index) in itemDots" :key="index" :class="item" />
-        </div> -->
+              <i v-for="(item,index) in itemDots" :key="index" :class="item" />
+            </div> -->
       </div>
-    </div>
-    <div v-if="detailSeen" class="item-detail">
-      <div class="item-detail-container">
-        <div class="item-detail-img">
-          <img :src="itemImg">
+      <div v-if="detailSeen" class="item-detail">
+        <div class="item-detail-container">
+          <div class="item-detail-img">
+            <img :src="itemImg">
+          </div>
+          <div class="item-detail-title"><img :src="itemTitle" class="mb-1" width="250"><img src="@/assets/text-item-detail.png" class="mt-1" width="240"></div>
+          <div class="item-detail-buttons">
+            <img src="@/assets/btn-photo.png" @touchend="$router.push({name:'photo'})">
+            <img src="@/assets/btn-reason.png" @touchend="$router.push({name:'list',params:{id:currentIndex}})">
+          </div>
+          <div class="star-frames"><canvas id="detail-frames"></canvas></div>
         </div>
-        <div class="item-detail-title"><img :src="itemTitle" class="mb-2"><img src="@/assets/text-item-detail.png" class="mt-2"></div>
-        <div class="item-detail-buttons">
-          <img src="@/assets/btn-photo.png" @click="$router.push({name:'photo'})">
-          <img src="@/assets/btn-reason.png" @click="$router.push({name:'list',params:{id:currentIndex}})">
-        </div>
-        <div class="star-frames"><canvas id="detail-frames"></canvas></div>
+        <div class="item-detail-close" @touchend="detailSeen = false"><img src="@/assets/icon-close-02.png" class="img-fluid"></div>
       </div>
-      <div class="item-detail-close" @click="detailSeen = false"><img src="@/assets/icon-close-02.png" class="img-fluid"></div>
-    </div>
-    <div class="animation-imgs">
-      <div v-for="(item,index) in itemSelects" :key="index"><img :src="item.img"></div>
-    </div>
+      <div class="animation-imgs">
+        <div v-for="(item,index) in itemSelects" :key="index"><img :src="item.img"></div>
+      </div>
+      
+        <div class="item-tip" @touchend="hideTip" v-if="tipSeen" :class="tipFadeClass"><img src="@/assets/tip-item-02.png" width="130" /></div>
+    </v-flex>
   </v-container>
 </template>
 <script>
@@ -61,13 +62,15 @@
         hasCompleted: true,
         time: 0.7,
         posY1: 295,
-        posY2: 335
+        posY2: 335,
+        tipFadeClass: ''
       };
     },
     computed: {
       ...mapGetters({
         currentIndex: "itemId",
-        imgs: "frameImgs"
+        imgs: "frameImgs",
+        tipSeen: "tipSeen",
       }),
       itemImg: function() {
         let i = this.currentIndex;
@@ -119,18 +122,18 @@
       })
     },
     methods: {
-      initSild(){
+      initSild() {
         let posY1 = this.posY1
         let posY2 = this.posY2
         let container = document.querySelector('.animation-imgs')
         let nodes = container.childNodes
         let currentIndex = this.currentIndex
         for (let i = 0; i < nodes.length; i++) {
-          if( currentIndex != i+1){
+          if (currentIndex != i + 1) {
             TweenLite.to(nodes[i].childNodes[0], this.time, {
               x: (i + 5 - currentIndex) % 5 * 80 - 120,
               y: (currentIndex - i == 3 || currentIndex - i == 4 || currentIndex - i == -1 || currentIndex - i == -2) ? posY2 : posY1,
-              scale:0.26
+              scale: 0.26
             });
           }
         }
@@ -157,13 +160,21 @@
       swiperight() {
         this.slide(true)
       },
+      hideTip(){
+        this.tipFadeClass = 'tip-fade'
+        setTimeout(() => {
+          this.$store.commit('tipSeen', false)
+        }, 1000);
+      },
       slide(toRight = true) {
         let vm = this
+        if( vm.tipSeen == true ){
+          this.hideTip()
+        }
         if (!vm.hasCompleted) {
           return;
         }
         let nextId
-        
         let posY1 = this.posY1
         let posY2 = this.posY2
         if (toRight) {
@@ -254,15 +265,6 @@
     top: 0;
     left: 0;
   }
-  .page {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    overflow-x: hidden;
-  }
   .item-trans {
     background: url('../assets/star.png') center 0 no-repeat;
     background-size: 300px auto;
@@ -285,6 +287,7 @@
     right: 0;
     z-index: 210;
     background: #95000c url("../assets/bkg.jpg") 0 center no-repeat;
+    background-size: 100% auto;
   }
   .item-detail-container {
     width: 100%;
@@ -308,15 +311,12 @@
   }
   .item-detail-title {
     margin: 0rem auto 0;
-    width: 24rem;
-    height: 16rem;
+    width: 25rem;
+    height: 14rem;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-  }
-  .item-detail-title img {
-    width: 100%;
   }
   .item-detail-buttons {
     margin: 0rem auto 0;
@@ -392,7 +392,7 @@
   }
   .item-text {
     margin: 0rem auto 0;
-    width: 23rem;
+    width: 25rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -434,7 +434,7 @@
   }
   .item-selects .item-select {
     height: 7rem;
-    background: url('../assets/bkg-star.png') center 0 no-repeat;
+    background: url('../assets/bkg-star.png') center 8px no-repeat;
     background-size: 7rem auto;
     width: 80px;
     text-align: center;
@@ -442,7 +442,7 @@
   }
   .item-selects .item-select:nth-child(2),
   .item-selects .item-select:nth-child(3) {
-    background-position-y: 40px;
+    background-position-y: 48px;
   }
   .item-dots {
     margin: 2rem auto 0;
@@ -462,7 +462,7 @@
     background: #610b0b;
   }
   .animation-imgs {
-    position: fixed;
+    position:absolute;
     z-index: 200;
     top: 0;
     left: 0;
@@ -480,6 +480,25 @@
   }
   .item-tip {
     text-align: center;
-    margin-top: 1.8rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 200px;
+    margin-left: -100px;
+    margin-top: -50px;
+    z-index: 200;
+    /* pointer-events: none; */
+  }
+  .tip-fade {
+    opacity: 0;
+    animation: tipfade 1s ease-in;    
+  }
+  @keyframes tipfade {
+    0%{
+      opacity: 1;
+    }
+    100%{
+      opacity: 0;
+    }
   }
 </style>

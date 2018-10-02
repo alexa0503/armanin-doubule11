@@ -1,12 +1,12 @@
 <template>
-  <v-container fluid v-swipeup="{fn:swipeup,name:'上划'}">
+  <v-container  fluid v-swipeup="{fn:swipeup,name:'上划'}">
     <div class="uri-invite"><img src="@/assets/uri-02.png" class="img-fluid">
       <div class="tip-invite">
-        <img src="@/assets/button-invite-01.png" width="102" class="mt-tip" @click="$router.push({name:'items'})">
+        <img src="@/assets/button-invite-01.png" width="102" class="mt-tip" @touchend="$router.push({name:'items'})">
       </div>
     </div>
     <div class="arrow-down">
-      <img class="icon-arrow" src="@/assets/icon-arrow-down.png" @click="$router.push({name:'invite'})">
+      <img class="icon-arrow" src="@/assets/icon-arrow-down.png" @touchend="$router.push({name:'invite'})">
     </div>
   </v-container>
 </template>
@@ -33,23 +33,22 @@
     left: 0;
     bottom: -2px;
     right: 0;
-    z-index: 10;
+    z-index: 1;
   }
   .tip-invite {
     position: absolute;
     top: -5rem;
     right: 0.5rem;
     width: 25rem;
-    height: 16rem;
+    height: 20rem;
     margin: 0 0 0 0;
     background: url("../assets/tip-02.png") 0 0 no-repeat;
     background-size: 25rem auto;
-    z-index: 99;
     text-align: center;
     padding-top: 1.8rem;
   }
   .mt-tip {
-    margin-top: 6.3rem;
+    margin-top: 8rem;
   }
   .arrow-down {
     position: absolute;

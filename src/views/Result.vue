@@ -1,40 +1,37 @@
 <template>
-  <v-container fluid>
-    <div class="logo"><img src="@/assets/logo.png" ></div>
-    <div class="result-canvas">
-      <img :src="canvas" >
-    </div>
-    <div class="result-footer" v-if="!goNow">
-      <div class="mt-1"><img 
-        src="@/assets/text-result.png" 
-        width="250" ></div>
-      <div class="mt-1"><img 
-        src="@/assets/button-receive.png" 
-        width="186" 
-        @click="receive" ></div>
-    </div>
-    <div class="result-footer" v-else>
-        <img @click="$router.push({name:'list',params:{id:itemId,had:'y'}})" class="mt-4" src="@/assets/button-return.png" width="126" />
-    </div>
-    <div class="form" v-if="seen">
-      <div class="form-container">
-        <div class="title mb-4"><img 
-          src="@/assets/title-form-01.png" 
-          width="135" ></div>
-        <div class="input-01 mt-4"><input v-model="inputs.name" placeholder="请输入姓名" type="text" ></div>
-        <div class="input-02 mt-2"><input type="tel" v-model="inputs.mobile" placeholder="请输入手机" ></div>
-        <div class="input-03 mt-2"><input type="tel" v-model="inputs.code" placeholder="验证码" ><div v-if="sent" class="tel-tip" @click="sendMsg">{{resetTime}}S后<br/>重新发送</div><div @click="sendMsg" class="tel-tip" v-else>点击<br/>发送</div></div>
-        <div class="text-agree mt-2 mb-4">
-            <img @click="agree()" style="margin-right:0.5rem;" src="@/assets/icon-agree-01.png" width="10" v-if="agreed" />
-            <img @click="agree()" style="margin-right:0.5rem;" src="@/assets/icon-agree-02.png" width="10" v-if="!agreed" />
-            <img @click="agree()" width="245" src="@/assets/text-agree.png" alt="我同意依照本隐私政策对我的个人信息进行收集和使用;我已阅读并确认已被给予充分机会理解该隐私政策的内容。" />
-        </div>
-        <div class="mt-4 form-button">
-            <img @click="formSubmit" src="@/assets/button-submit.png" width="126" />
-        </div>
-      </div>
-    </div>
-  </v-container>
+    <v-container justify-center column fluid>
+        <v-flex relative xs12>
+            <div class="result-canvas">
+                <img :src="canvas">
+            </div>
+            <div class="result-footer" v-if="!goNow">
+                <div class="mt-1"><img src="@/assets/text-result.png" width="250"></div>
+                <div class="mt-1"><img src="@/assets/button-receive.png" width="186" @touchend="receive"></div>
+            </div>
+            <div class="result-footer" v-else>
+                <img @touchend="$router.push({name:'list',params:{id:itemId,had:'y'}})" class="mt-4" src="@/assets/button-return.png" width="126" />
+            </div>
+            <div class="form" v-if="seen">
+                <div class="form-container">
+                    <div class="title mb-4"><img src="@/assets/title-form-01.png" width="135"></div>
+                    <div class="input-01 mt-4"><input v-model="inputs.name" placeholder="请输入姓名" type="text"></div>
+                    <div class="input-02 mt-2"><input type="tel" v-model="inputs.mobile" placeholder="请输入手机"></div>
+                    <div class="input-03 mt-2"><input type="tel" v-model="inputs.code" placeholder="验证码">
+                        <div v-if="sent" class="tel-tip" @touchend="sendMsg">{{resetTime}}S后<br/>重新发送</div>
+                        <div @touchend="sendMsg" class="tel-tip" v-else>点击<br/>发送</div>
+                    </div>
+                    <div class="text-agree mt-2 mb-4">
+                        <img @touchend="agree()" style="margin-right:0.5rem;" src="@/assets/icon-agree-01.png" width="10" v-if="agreed" />
+                        <img @touchend="agree()" style="margin-right:0.5rem;" src="@/assets/icon-agree-02.png" width="10" v-if="!agreed" />
+                        <img @touchend="agree()" width="245" src="@/assets/text-agree.png" alt="我同意依照本隐私政策对我的个人信息进行收集和使用;我已阅读并确认已被给予充分机会理解该隐私政策的内容。" />
+                    </div>
+                    <div class="mt-4 form-button">
+                        <img @touchend="formSubmit" src="@/assets/button-submit.png" width="126" />
+                    </div>
+                </div>
+            </div>
+        </v-flex>
+    </v-container>
 </template>
 <script>
     import {
@@ -49,7 +46,7 @@
                 agreed: true,
                 sent: false,
                 inputs: {
-                    mobile:'',
+                    mobile: '',
                     name: '',
                     code: ''
                 }
@@ -63,53 +60,47 @@
             })
         },
         methods: {
-            agree(){
+            agree() {
                 window.console.log(this.agreed)
-                if( this.agreed ){
+                if (this.agreed) {
                     this.agreed = false
-                }
-                else{
+                } else {
                     this.agreed = true
                 }
             },
-            sendMsg(){
-                if(!this.sent){
+            sendMsg() {
+                if (!this.sent) {
                     this.sent = true
                     this.resetTime = 59
-                    let t = setInterval(()=>{
+                    let t = setInterval(() => {
                         --this.resetTime
-                        if( this.resetTime <= 0 ){
+                        if (this.resetTime <= 0) {
                             this.sent = false
                             window.clearInterval(t)
                         }
-                    },1000)
+                    }, 1000)
                 }
             },
-            receive(){
-                window.location.href="http://campaign.giorgioarmanibeauty.cn/double112018shoppingguideline"
+            receive() {
+                window.location.href = "http://campaign.giorgioarmanibeauty.cn/double112018shoppingguideline"
                 //this.seen = true
             },
-            formSubmit(){
+            formSubmit() {
                 let inputs = this.inputs
-                if( inputs.name == '' ){
+                if (inputs.name == '') {
                     alert('请输入姓名')
-                }
-                else if( inputs.name.length > 20 ){
+                } else if (inputs.name.length > 20) {
                     alert('姓名太长了')
-                }
-                else if( inputs.mobile == ''){
+                } else if (inputs.mobile == '') {
                     alert('请输入手机号')
-                }
-                else if( ! /^1[0-9]{10}$/.test(inputs.mobile)){
+                } else if (!/^1[0-9]{10}$/.test(inputs.mobile)) {
                     alert('手机号码格式不正确')
-                }
-                else if( inputs.code == '' ){
+                } else if (inputs.code == '') {
                     alert('验证码不正确')
-                }
-                else{
+                } else {
                     // this.seen = false
                     alert('提交成功')
-                    window.location.href="http://campaign.giorgioarmanibeauty.cn/double112018shoppingguideline"
+                    window.location.href = "http://campaign.giorgioarmanibeauty.cn/double112018shoppingguideline"
                 }
             }
         }
@@ -146,18 +137,22 @@
         width: 25rem;
         padding: 1.8rem 0.1rem 1.8rem 9rem;
     }
-    .form-container .input-01,.form-container .input-02,.form-container .input-03 {
+    .form-container .input-01,
+    .form-container .input-02,
+    .form-container .input-03 {
         position: relative;
         width: 25rem;
     }
-    .form-container .input-01::after,.form-container .input-02::after,.form-container .input-03::after{
+    .form-container .input-01::after,
+    .form-container .input-02::after,
+    .form-container .input-03::after {
         content: "";
         position: absolute;
-        left:0;
+        left: 0;
         top: 2px;
         bottom: 0;
         background: url('../assets/label-name.png') 0 center no-repeat;
-        background-size:8.25rem auto;
+        background-size: 8.25rem auto;
         z-index: 99;
         height: 3.5rem;
         width: 9rem;
@@ -165,11 +160,11 @@
     }
     .form-container .input-02::after {
         background: url('../assets/label-mobile.png') 0 center no-repeat;
-        background-size:8.25rem auto;
+        background-size: 8.25rem auto;
     }
     .form-container .input-03::after {
         background: url('../assets/label-code.png') 0 center no-repeat;
-        background-size:8.25rem auto;
+        background-size: 8.25rem auto;
     }
     .input-03 input {
         width: 20rem;
@@ -212,6 +207,11 @@
     .result-footer {
         text-align: center;
         margin: 0rem 0;
+    }
+    @media screen and (min-height:600px) {
+        .result-footer .mt-1 {
+            margin-top: 3rem!important;
+        }
     }
 </style>
 

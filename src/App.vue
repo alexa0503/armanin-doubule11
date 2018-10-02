@@ -1,8 +1,10 @@
 <template>
   <v-app>
-    <transition :name="transitionName">
-      <router-view/>
-    </transition>
+    <v-content>
+      <transition :name="transitionName">
+        <router-view/>
+      </transition>
+    </v-content>
     <div class="loading" v-if="loading">
       <v-progress-circular :width="7" color="red" :size="70" indeterminate></v-progress-circular>
     </div>
@@ -95,14 +97,11 @@
 </script>
 
 <style>
-  /* body {
-            font-size: 65% !important;
-          } */
+  .relative {
+    position: relative!important;
+  }
   .container {
     padding: 0!important;
-    position: relative;
-    width: 100%;
-    height: 100%;
   }
   .img-fluid {
     width: 100%;
@@ -112,7 +111,7 @@
     position: fixed;
     top: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     left: 0;
     right: 0;
     z-index: 999;
@@ -121,26 +120,18 @@
     align-items: center;
     justify-content: center;
   }
-  #app {
-    font-family: "Avenir", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #000;
-    position: relative;
-    background: #95000c url("assets/bkg.jpg") 0 center no-repeat;
-    background-size: 100% auto;
-    overflow: auto;
-    overflow-x: hidden;
-  }
   .swipe-enter-active {
     /* transition: opacity .5s; */
-    animation: enter .6s ease-in;
+    animation: enter .4s ease-in;
   }
   .swipe-leave-active {
-    animation: out .3s ease-out;
+    animation: out .4s ease-out;
   }
   @keyframes enter {
     0% {
+      transform: translate(0, 100rem);
+    }
+    1% {
       transform: translate(0, 100rem);
     }
     100% {
@@ -149,7 +140,7 @@
   }
   @keyframes out {
     0% {
-      transform: translate(0, 0);
+      transform: translate(0, 0rem);
     }
     100% {
       transform: translate(0, -100rem);
