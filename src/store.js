@@ -6,7 +6,7 @@ import { userUrl } from './utils/api';
 Vue.use(Vuex);
 export default new Vuex.Store({
 	state: {
-		itemId: 2,
+		itemId: 1,
 		loading: false,
 		image: null,
 		canvas: null,
@@ -15,6 +15,7 @@ export default new Vuex.Store({
 		goNow: false,
 		user: null,
 		tipSeen: true,
+		showLogo: true,
 		comment: ''
 	},
 	mutations: {
@@ -26,6 +27,9 @@ export default new Vuex.Store({
 		},
 		comment(state, comment) {
 			state.comment = comment;
+		},
+		showLogo(state, payload) {
+			state.showLogo = payload;
 		},
 		tipSeen(state, tipSeen) {
 			state.tipSeen = tipSeen;
@@ -54,6 +58,7 @@ export default new Vuex.Store({
 	},
 	getters: {
 		itemId: (state) => state.itemId,
+		showLogo: (state) => state.showLogo,
 		tipSeen: (state) => state.tipSeen,
 		comment: (state) => state.comment,
 		user: (state) => state.user,

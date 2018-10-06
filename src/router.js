@@ -17,9 +17,9 @@ export default new Router({
 			component: () => import('./views/Invite.vue')
 		},
 		{
-			path: '/items',
-			name: 'items',
-			component: () => import('./views/Items.vue')
+			path: '/item/:id?',
+			name: 'item',
+			component: () => import('./views/Item.vue')
 		},
 		{
 			path: '/photo',
@@ -27,14 +27,14 @@ export default new Router({
 			component: () => import('./views/Photo.vue')
 		},
 		{
-			path: '/list/:id/:had?',
-			name: 'list',
-			component: () => import('./views/List.vue')
-		},
-		{
 			path: '/result',
 			name: 'result',
 			component: () => import('./views/Result.vue')
+		},
+		{
+			path: '/buy/:id',
+			name: 'buy',
+			component: () => import('./views/Buy.vue')
 		}
 	]
 });

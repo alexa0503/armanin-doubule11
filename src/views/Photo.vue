@@ -74,7 +74,13 @@
                 return 'top-tip-0' + this.itemId;
             }
         },
-        mounted() {},
+        mounted() {
+            this.photoed = true
+            setTimeout(() => {
+                let screenHeight = window.screen.height || document.documentElement.height;
+                document.getElementById('photo-image-preview-mask').style.height = screenHeight - 359 + 'px'
+            }, 200);
+        },
         methods: {
             upload() {
                 this.$refs.cropper.getCropData((data) => {
@@ -88,8 +94,8 @@
                 var canvas = document.createElement("canvas");
                 var ctx = canvas.getContext("2d");
                 let ratio = self.getPixelRatio(ctx);
-                canvas.width = 750;
-                canvas.height = 922;
+                canvas.width = ratio*750/2;
+                canvas.height = ratio*922/2;
                 var imglen = imgsrcArray.length;
                 (function f(n) {
                     if (n < imglen) {
@@ -97,8 +103,8 @@
                         img.crossOrigin = "Anonymous"; //解决跨域问题
                         img.onload = function() {
                             if (n == 0) {
-                                ctx.drawImage(img, 0, 172, 750, 750);
-                                let imageData = ctx.getImageData(0, 172, canvas.width, canvas.height)
+                                ctx.drawImage(img, 0, 172*(ratio/2), 750*(ratio/2), 750*(ratio/2));
+                                let imageData = ctx.getImageData(0, 172*(ratio/2), canvas.width, canvas.height)
                                 let pixelData = imageData.data
                                 for (var i = 0; i < canvas.width * canvas.height; i++) {
                                     var r = pixelData[i * 4 + 0];
@@ -118,9 +124,9 @@
                                         // pixelData[i*4+2] = (b-g-r)*3/2;
                                     }
                                 }
-                                ctx.putImageData(imageData, 0, 172, 0, 0, 750, 750);
+                                ctx.putImageData(imageData, 0, 172*(ratio/2), 0, 0, 750*(ratio/2), 750*(ratio/2));
                             } else {
-                                ctx.drawImage(img, 0, 0, 750, 922);
+                                ctx.drawImage(img, 0, 0, 750*(ratio/2), 922*(ratio/2));
                             }
                             f(n + 1);
                         };

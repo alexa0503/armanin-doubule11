@@ -46,18 +46,27 @@ Vue.filter('stringLimit', function(value, len = 22) {
 	}
 	return value;
 });
-// if (process.env.NODE_ENV === 'development') {
-// 	store.state.user = {
-// 		nickname: '小A',
-// 		avatar: require('@/assets/avatar-01.png'),
-// 		img: null
-// 	};
-// }
-if (!store.getters.user) {
-	store.dispatch('getUser').then(() => {}).catch(() => {
-		// alert('授权失败' + err);
+// store.dispatch('getUser').then(() => {}).catch(() => {
+// 	window.location.href = loginUrl;
+// });
+if (process.env.NODE_ENV !== 'development') {
+	router.beforeEach((to, from, next) => {
+		let n = next;
+		if (!store.getters.user || !store.getters.user.uid) {
+			store
+				.dispatch('getUser')
+				.then(() => {
+					n();
+				})
+				.catch(() => {
+					window.location.href = loginUrl;
+				});
+		} else {
+			next();
+		}
 	});
 }
+
 require('./utils/touch.js');
 new Vue({
 	router,

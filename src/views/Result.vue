@@ -6,7 +6,7 @@
             </div>
             <div class="result-footer" v-if="!goNow">
                 <div class="mt-1"><img src="@/assets/text-result.png" width="250"></div>
-                <div class="mt-1"><img src="@/assets/button-receive.png" width="186" @touchend="receive"></div>
+                <div class="mt-1"><img src="@/assets/button-photo-03.png" width="176" @touchend="receive"></div>
             </div>
             <div class="result-footer" v-else>
                 <img @touchend="$router.push({name:'list',params:{id:itemId,had:'y'}})" class="mt-4" src="@/assets/button-return.png" width="126" />
@@ -59,6 +59,8 @@
                 itemId: "itemId"
             })
         },
+        created(){
+        },
         methods: {
             agree() {
                 window.console.log(this.agreed)
@@ -82,7 +84,8 @@
                 }
             },
             receive() {
-                window.location.href = "http://campaign.giorgioarmanibeauty.cn/double112018shoppingguideline"
+                this.$router.push({name:'buy',params:{id:this.itemId}})
+                // window.location.href = "http://campaign.giorgioarmanibeauty.cn/double112018shoppingguideline"
                 //this.seen = true
             },
             formSubmit() {
@@ -208,9 +211,9 @@
         text-align: center;
         margin: 0rem 0;
     }
-    @media screen and (min-height:600px) {
+    @media screen and (min-height:800px) {
         .result-footer .mt-1 {
-            margin-top: 3rem!important;
+            margin-top: 2rem!important;
         }
     }
 </style>

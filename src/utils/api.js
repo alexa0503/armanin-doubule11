@@ -10,3 +10,4 @@ export const followUrl = domain + 'index.php?action=follow';
 export const voteUrl = domain + 'index.php?action=vote';
 export const loginUrl = domain + 'index.php?action=login';
 export const userUrl = domain + 'index.php?action=user';
+export const infoUrl = domain + 'index.php?action=info';

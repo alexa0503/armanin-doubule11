@@ -1,24 +1,20 @@
 <template>
-  <v-container justify-center column fill-height v-swipeup="{fn:swipeup,name:'上划'}" fluid>
+  <v-container fluid justify-center column fill-height v-swipeup="{fn:swipeup,name:'上划'}" >
     <v-flex relative xs12>
       <div class="star">
         <img src="@/assets/star.png" class="star-img img-fluid">
-        <div class="star-frames"><canvas id="frames"></canvas></div>
         <div class="uri">
           <img src="@/assets/uri-01.png" width="240">
         </div>
         <div class="tip">
-          <img width="232" @touchend="introSeen = true" src="@/assets/text-index-02.png" class="tip-text">
-          <!-- <div class="tip-hand"><img src="@/assets/icon-hand.png" width="27" /></div> -->
-          <!-- <div class="tip-close">
-                  <img src="@/assets/icon-close-01.png" />
-                </div> -->
+          <img width="200" @touchend="introSeen = true" src="@/assets/text-index-02.png" class="tip-text">
         </div>
       </div>
+    </v-flex>
+    
       <div class="arrow-down">
         <img v-if="!introSeen" class="icon-arrow" src="@/assets/icon-arrow-down.png" @touchend="$router.push({name:'invite'})">
       </div>
-    </v-flex>
     <div v-if="introSeen" class="intro">
       <img src="@/assets/text-index-03.png" class="mb-intro">
       <img src="@/assets/text-index-04.png">
@@ -47,13 +43,11 @@
     },
     watch: {
       '$route' (to, from) {
-        this.drawFrames()
+        // this.drawFrames()
       },
     },
     mounted() {
-      this.drawFrames()
-      // this.$store.dispatch('loading', true)
-      // TweenLite.to(obj, 1, {y: 10,repeat:-1, yoyo:true})
+      // this.drawFrames()
     },
     methods: {
       drawFrames() {
@@ -96,7 +90,7 @@
   }
   .star {
     position: relative;
-    padding-top: 8rem;
+    padding-top: 4rem;
   }
   .star .star-img {
     margin-top: -8rem;
@@ -109,7 +103,7 @@
     bottom: 0;
   }
   .uri {
-    margin-top: 10rem;
+    margin-top: 4rem;
   }
   .intro {
     background: rgba(179, 0, 23, 0.85);
@@ -117,20 +111,12 @@
     padding: 10rem 0 0;
   }
   .arrow-down {
-    position: relative;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     text-align: center;
-    padding-top: 6rem;
     height: 4rem;
-  }
-  @media screen and (min-height:600px) {
-    .arrow-down {
-      padding-top: 8rem;
-    }
-  }
-  @media screen and (min-height:640px) {
-    .arrow-down {
-      padding-top: 14rem;
-    }
   }
   .arrow-down img {
     width: 5.4rem;
@@ -164,13 +150,13 @@
   }
   .tip {
     position: absolute;
-    top: -4rem;
-    right: 2rem;
-    width: 26rem;
-    height: 16rem;
-    margin: 0 1rem 0 0;
+    top: -55px;
+    right: 0;
+    width: 252px;
+    height: 145px;
+    margin: 0 10px 0 0;
     background: url("../assets/tip-index-01.png") 0 0 no-repeat;
-    background-size: 26rem auto;
+    background-size: 252px auto;
     z-index: 3;
     text-align: center;
   }
@@ -189,7 +175,6 @@
     }
   }
   .tip .tip-text {
-    width: 20.8rem;
     margin: 2rem 0 0;
   }
   .tip .tip-title {
